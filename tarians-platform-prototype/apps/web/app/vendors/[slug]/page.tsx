@@ -1,7 +1,6 @@
 "use client";
 
 import { notFound } from "next/navigation";
-import { use } from "react";
 import { vendorBySlug, productsByVendor } from "@tarians/mock-data";
 import { useApp } from "@/components/AppProvider";
 import { t } from "@/lib/i18n";
@@ -11,9 +10,9 @@ import { DemoBadge } from "@/components/DemoBadge";
 export default function VendorStorefront({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }) {
-  const { slug } = use(params);
+  const { slug } = params;
   const { locale } = useApp();
   const vendor = vendorBySlug(slug);
   if (!vendor) return notFound();

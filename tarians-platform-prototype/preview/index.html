@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tarian's — Preview (mock data)</title>
+<!--
+  Tarian's platform — self-contained PREVIEW.
+  This single file mirrors the Next.js prototype's content and behavior using
+  plain HTML/CSS/JS so it opens in any browser with NO install, NO server, and
+  NO network. Mock data only; nothing is deployed and no paid services are used.
+  It is a faithful stand-in for the real app, not a replacement for `next dev`.
+-->
+<style>
+  :root { --g50:#f1f8f2; --g100:#ddeede; --g500:#2f8f4e; --g600:#237a40; --g700:#1b5e32; --g900:#0f3a1f; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", Arial, sans-serif; background:var(--g50); color:var(--g900); }
+  a { color: inherit; }
+  header { position:sticky; top:0; z-index:30; background:rgba(255,255,255,.92); backdrop-filter:blur(6px); border-bottom:1px solid var(--g100); }
+  .bar { max-width:1000px; margin:auto; display:flex; align-items:center; gap:16px; padding:12px 16px; flex-wrap:wrap; }
+  .brand { font-weight:800; color:var(--g700); display:flex; align-items:center; gap:8px; cursor:pointer; }
+  nav.links { display:flex; gap:14px; flex:1; flex-wrap:wrap; }
+  nav.links button { background:none; border:none; font:inherit; font-weight:600; color:rgba(15,58,31,.8); cursor:pointer; padding:4px; }
+  nav.links button.active { color:var(--g700); border-bottom:2px solid var(--g500); }
+  .ctrls { margin-left:auto; display:flex; gap:8px; align-items:center; }
+  select, .cartbtn { border:1px solid var(--g100); background:#fff; border-radius:6px; padding:6px 10px; font:inherit; cursor:pointer; }
+  .cartbtn { background:var(--g600); color:#fff; border:none; position:relative; font-weight:600; }
+  .badge { position:absolute; top:-8px; right:-8px; background:#f59e0b; color:#fff; border-radius:999px; min-width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:12px; padding:0 4px; }
+  main { max-width:1000px; margin:auto; padding:28px 16px; }
+  .demo { display:inline-flex; gap:6px; align-items:center; background:#fef3c7; color:#92400e; border:1px solid #fcd34d; border-radius:999px; padding:2px 10px; font-size:12px; font-weight:600; }
+  .hero { border-radius:18px; background:linear-gradient(135deg,var(--g600),var(--g900)); color:#fff; padding:40px; }
+  .hero h1 { font-size:2.4rem; margin:12px 0 8px; }
+  .grid { display:grid; gap:16px; }
+  @media(min-width:640px){ .cols2{grid-template-columns:1fr 1fr;} .cols3{grid-template-columns:1fr 1fr 1fr;} }
+  .card { background:#fff; border:1px solid var(--g100); border-radius:12px; padding:16px; box-shadow:0 1px 2px rgba(0,0,0,.03); }
+  .pill { background:var(--g100); color:var(--g700); border-radius:999px; padding:2px 8px; font-size:11px; display:inline-block; margin:2px 2px 0 0; }
+  .btn { background:var(--g600); color:#fff; border:none; border-radius:6px; padding:8px 12px; font:inherit; font-weight:600; cursor:pointer; }
+  .btn:hover { background:var(--g700); }
+  .btn.amber { background:#fbbf24; color:var(--g900); }
+  .price { font-weight:800; color:var(--g700); }
+  .region { background:var(--g50); color:var(--g700); border-radius:6px; padding:2px 8px; font-size:12px; }
+  .chipbar { display:flex; gap:8px; flex-wrap:wrap; margin:8px 0 16px; }
+  .chip { border:1px solid var(--g100); background:#fff; color:var(--g700); border-radius:999px; padding:6px 12px; cursor:pointer; font:inherit; }
+  .chip.active { background:var(--g600); color:#fff; border-color:var(--g600); }
+  .muted { color:rgba(15,58,31,.6); font-size:.9rem; }
+  /* cart drawer */
+  .overlay { position:fixed; inset:0; background:rgba(0,0,0,.3); display:none; z-index:40; }
+  .overlay.open { display:block; }
+  .drawer { position:fixed; top:0; right:0; height:100%; width:100%; max-width:380px; background:#fff; z-index:41; transform:translateX(100%); transition:transform .25s; display:flex; flex-direction:column; }
+  .drawer.open { transform:none; }
+  .drawer header { padding:16px; border-bottom:1px solid var(--g100); display:flex; justify-content:space-between; align-items:center; }
+  .drawer .items { flex:1; overflow:auto; padding:16px; }
+  .drawer .foot { border-top:1px solid var(--g100); padding:16px; }
+  .ci { display:flex; justify-content:space-between; align-items:center; border:1px solid var(--g100); border-radius:8px; padding:8px; margin-bottom:8px; gap:8px; }
+  /* chat */
+  .chat { border:1px solid var(--g100); border-radius:12px; background:#fff; display:flex; flex-direction:column; }
+  .chat .head { display:flex; gap:10px; align-items:center; padding:12px; border-bottom:1px solid var(--g100); }
+  .chat .log { padding:12px; display:flex; flex-direction:column; gap:8px; min-height:160px; max-height:300px; overflow:auto; }
+  .msg { max-width:85%; padding:8px 12px; border-radius:10px; font-size:.9rem; }
+  .msg.ai { align-self:flex-start; background:var(--g50); }
+  .msg.user { align-self:flex-end; background:var(--g600); color:#fff; }
+  .chat .in { display:flex; gap:8px; padding:12px; border-top:1px solid var(--g100); }
+  .chat .in input { flex:1; border:1px solid var(--g100); border-radius:6px; padding:8px; font:inherit; }
+  .stage { border-radius:18px; background:linear-gradient(135deg,var(--g700),var(--g900)); color:#fff; padding:28px; }
+  .spot { display:flex; gap:16px; align-items:center; background:rgba(255,255,255,.1); border-radius:12px; padding:16px; }
+  .dot { height:8px; width:32px; border-radius:999px; background:rgba(255,255,255,.3); border:none; cursor:pointer; }
+  .dot.active { background:#fbbf24; }
+  footer { border-top:1px solid var(--g100); background:#fff; text-align:center; padding:20px; color:rgba(15,58,31,.5); font-size:12px; }
+  .live-tag { background:#dc2626; color:#fff; border-radius:999px; padding:2px 8px; font-size:12px; font-weight:700; }
+  h2.sec { font-size:1.25rem; margin:0 0 12px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <div class="brand" onclick="go('home')">🌿 <span id="brandName">タリアンズ</span></div>
+    <nav class="links" id="nav"></nav>
+    <div class="ctrls">
+      <select id="locale" onchange="setLocale(this.value)">
+        <option value="ja">日本語</option>
+        <option value="en">EN</option>
+      </select>
+      <select id="currency" onchange="setCurrency(this.value)">
+        <option value="JPY">JPY ¥</option>
+        <option value="USD">USD $</option>
+      </select>
+      <button class="cartbtn" onclick="openCart()"><span id="cartLabel">カート</span><span class="badge" id="cartCount" style="display:none">0</span></button>
+    </div>
+  </div>
+</header>
+
+<main id="app"></main>
+
+<footer>Tarian's · plantbased.cloud · AlphaDataCenter.ai — preview, mock data only. No deployment, no paid services.</footer>
+
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+<aside class="drawer" id="drawer">
+  <header><strong id="cartTitle">カート</strong><button onclick="closeCart()" style="border:none;background:none;font-size:24px;cursor:pointer">×</button></header>
+  <div class="items" id="cartItems"></div>
+  <div class="foot">
+    <div style="display:flex;justify-content:space-between;font-weight:700;margin-bottom:8px"><span id="totalLabel">合計</span><span id="cartTotal">¥0</span></div>
+    <button class="btn" style="width:100%" onclick="checkout()" id="checkoutBtn">購入手続き（デモ）</button>
+    <p class="muted" style="text-align:center;margin:8px 0 0" id="checkoutNote"></p>
+  </div>
+</aside>
+
+<script>
+/* ---------- mock data (mirrors packages/mock-data) ---------- */
+const VENDORS = [
+  { id:"v-midori", slug:"midori-foods", name:{en:"Midori Foods",ja:"みどりフーズ"}, story:{en:"A Kyoto family kitchen turning heirloom soy and seasonal vegetables into everyday staples.",ja:"京都の家庭の台所から、伝統的な大豆と旬の野菜を毎日の定番食品に。"}, region:"JP", logoEmoji:"🌿", verified:true },
+  { id:"v-umami-lab", slug:"umami-lab", name:{en:"Umami Lab",ja:"うま味ラボ"}, story:{en:"Tokyo food scientists crafting plant-based umami: koji, miso, and fermented sauces.",ja:"東京の食品科学者が作る植物性のうま味。麹、味噌、発酵ソース。"}, region:"JP", logoEmoji:"🍶", verified:true },
+  { id:"v-green-saigon", slug:"green-saigon", name:{en:"Green Saigon",ja:"グリーンサイゴン"}, story:{en:"Vietnamese street-food flavors reimagined with 100% plants, made in Ho Chi Minh City.",ja:"ベトナムの屋台の味を100%植物性で再現。ホーチミン市製。"}, region:"APAC", logoEmoji:"🌱", verified:true },
+  { id:"v-terra-global", slug:"terra-global", name:{en:"Terra Global",ja:"テラグローバル"}, story:{en:"A global pantry brand sourcing organic legumes and grains for plant-based cooking everywhere.",ja:"世界中の植物性料理のために有機豆類と穀物を調達するグローバルブランド。"}, region:"GLOBAL", logoEmoji:"🌍", verified:false },
+];
+const PRODUCTS = [
+  { id:"p-tofu-silken", vendorId:"v-midori", name:{en:"Silken Heirloom Tofu",ja:"絹ごし伝統豆腐"}, description:{en:"Delicate silken tofu from heirloom Kyoto soybeans. Ready to eat.",ja:"京都の伝統大豆を使った繊細な絹ごし豆腐。そのままどうぞ。"}, region:"JP", price:{jpy:380,usd:2.5}, dietary:["vegan","gluten-free","organic"], imageEmoji:"🧈", featured:true },
+  { id:"p-edamame", vendorId:"v-midori", name:{en:"Salted Edamame",ja:"塩枝豆"}, description:{en:"Flash-frozen young soybeans, lightly salted. Snack or side.",ja:"急速冷凍の枝豆を軽く塩味で。おやつにも付け合わせにも。"}, region:"JP", price:{jpy:290,usd:1.9}, dietary:["vegan","gluten-free"], imageEmoji:"🫛" },
+  { id:"p-koji-miso", vendorId:"v-umami-lab", name:{en:"White Koji Miso",ja:"白麹味噌"}, description:{en:"Mellow, naturally fermented white miso. A plant-based umami base.",ja:"まろやかで自然発酵の白味噌。植物性うま味のベース。"}, region:"JP", price:{jpy:620,usd:4.1}, dietary:["vegan","soy-free"], imageEmoji:"🍲", featured:true },
+  { id:"p-umami-sauce", vendorId:"v-umami-lab", name:{en:"Fermented Umami Sauce",ja:"発酵うま味ソース"}, description:{en:"A splash adds deep savory depth to any plant-based dish.",ja:"ひと振りで植物性料理に深いコクを。"}, region:"JP", price:{jpy:540,usd:3.6}, dietary:["vegan"], imageEmoji:"🫗" },
+  { id:"p-banh-mi-kit", vendorId:"v-green-saigon", name:{en:"Plant Bánh Mì Kit",ja:"植物性バインミーキット"}, description:{en:"Everything for two Vietnamese sandwiches: pickles, pâté, and baguette.",ja:"ベトナムサンド2人分一式。漬物、パテ、バゲット付き。"}, region:"APAC", price:{jpy:980,usd:6.5}, dietary:["vegan","nut-free"], imageEmoji:"🥖", featured:true },
+  { id:"p-lemongrass-tea", vendorId:"v-green-saigon", name:{en:"Lemongrass Iced Tea",ja:"レモングラスアイスティー"}, description:{en:"Refreshing caffeine-free herbal tea, lightly sweetened.",ja:"カフェインフリーで爽やかなハーブティー。ほんのり甘く。"}, region:"APAC", price:{jpy:320,usd:2.1}, dietary:["vegan","gluten-free","nut-free"], imageEmoji:"🧋" },
+  { id:"p-lentils", vendorId:"v-terra-global", name:{en:"Organic Red Lentils",ja:"有機赤レンズ豆"}, description:{en:"Quick-cooking protein-rich lentils. 500g resealable pack.",ja:"短時間で煮える高たんぱくレンズ豆。500g再封可能パック。"}, region:"GLOBAL", price:{jpy:450,usd:3.0}, dietary:["vegan","gluten-free","organic","nut-free"], imageEmoji:"🫘" },
+  { id:"p-protein", vendorId:"v-terra-global", name:{en:"Pea Protein Blend",ja:"えんどう豆プロテイン"}, description:{en:"Unflavored plant protein for smoothies and baking. 1kg.",ja:"スムージーや焼き菓子に。無香料の植物性プロテイン。1kg。"}, region:"GLOBAL", price:{jpy:2480,usd:16.4}, dietary:["vegan","gluten-free","soy-free"], imageEmoji:"🥤" },
+];
+const MEALS = [
+  { id:"k-ramen", name:{en:"Shoyu Mushroom Ramen",ja:"醤油きのこラーメン"}, description:{en:"Rich mushroom-shoyu broth, fresh noodles, charred corn and greens.",ja:"濃厚なきのこ醤油スープ、生麺、焼きとうもろこしと青菜。"}, price:{jpy:1180,usd:7.8}, region:"JP", leadTimeMin:25, imageEmoji:"🍜" },
+  { id:"k-donburi", name:{en:"Teriyaki Tofu Donburi",ja:"照り焼き豆腐丼"}, description:{en:"Glazed tofu over rice with pickles and sesame.",ja:"照り焼き豆腐をご飯にのせ、漬物とごまを添えて。"}, price:{jpy:980,usd:6.5}, region:"JP", leadTimeMin:20, imageEmoji:"🍚" },
+  { id:"k-pho", name:{en:"Herb Garden Phở",ja:"ハーブガーデンフォー"}, description:{en:"Aromatic clear broth, rice noodles, tofu and a pile of fresh herbs.",ja:"香り高い澄んだスープ、フォー麺、豆腐とたっぷりのハーブ。"}, price:{jpy:1080,usd:7.1}, region:"APAC", leadTimeMin:30, imageEmoji:"🍲" },
+  { id:"k-bowl", name:{en:"Harvest Grain Bowl",ja:"ハーベストグレインボウル"}, description:{en:"Quinoa, roasted veg, lentils and tahini dressing.",ja:"キヌア、焼き野菜、レンズ豆、タヒニドレッシング。"}, price:{jpy:1280,usd:8.5}, region:"GLOBAL", leadTimeMin:15, imageEmoji:"🥗" },
+];
+const COURSES = [
+  { id:"c-basics", title:{en:"Plant-Based Basics",ja:"プラントベースの基本"}, level:"beginner", summary:{en:"Start here: what plant-based eating is, and how to build a balanced plate.",ja:"まずはここから。プラントベースとは何か、バランスの良い一皿の作り方。"}, lessons:[
+    { title:{en:"What does plant-based mean?",ja:"プラントベースとは？"}, body:{en:"Plant-based eating centers meals on vegetables, legumes, grains, nuts and seeds. It is a spectrum, not an all-or-nothing rule.",ja:"プラントベースの食事は、野菜、豆類、穀物、ナッツ、種子を中心にします。ゼロか百かではなく、幅のある考え方です。"}, durationMin:6 },
+    { title:{en:"Protein without meat",ja:"肉なしのたんぱく質"}, body:{en:"Legumes, tofu, tempeh, and whole grains together provide complete protein across a day.",ja:"豆類、豆腐、テンペ、全粒穀物を一日を通して組み合わせると、完全なたんぱく質になります。"}, durationMin:8 },
+  ]},
+  { id:"c-japan", title:{en:"Plant-Based Washoku",ja:"植物性の和食"}, level:"intermediate", summary:{en:"Traditional Japanese cooking is naturally plant-forward. Learn the building blocks.",ja:"伝統的な和食はもともと植物中心。その基本を学びます。"}, lessons:[
+    { title:{en:"Dashi without fish",ja:"魚を使わない出汁"}, body:{en:"Kombu and dried shiitake make a deep umami dashi — the base of countless dishes.",ja:"昆布と干し椎茸で深いうま味の出汁ができます。数々の料理の土台です。"}, durationMin:7 },
+  ]},
+];
+const CHARACTERS = {
+  "char-tutor": { name:{en:"Aoi",ja:"あおい"}, role:{en:"AI Nutrition Tutor",ja:"AI栄養チューター"}, avatarEmoji:"👩‍🏫", greeting:{en:"Hi! I'm Aoi, your plant-based tutor. Ask me about nutrition, cooking, or ingredients.",ja:"こんにちは！プラントベースのチューター、あおいです。栄養や料理、食材のことを聞いてください。"} },
+  "char-host": { name:{en:"Chef Ren",ja:"レンシェフ"}, role:{en:"Tarian's LIVE Host",ja:"タリアンズLIVEホスト"}, avatarEmoji:"👨‍🍳", greeting:{en:"Welcome to Tarian's LIVE! I'm Chef Ren. Let's cook and shop together.",ja:"タリアンズLIVEへようこそ！レンシェフです。一緒に料理してお買い物しましょう。"} },
+};
+/* scripted AI (mirrors packages/ai mock-service) */
+const SCRIPTS = {
+  "char-tutor": [
+    { m:/protein|たんぱく|タンパク/i, en:"Great plant proteins: tofu, tempeh, edamame, lentils and pea protein. Combine legumes with grains across the day for complete protein.", ja:"良い植物性たんぱく質は、豆腐、テンペ、枝豆、レンズ豆、えんどう豆プロテインです。豆類と穀物を一日で組み合わせると完全になります。" },
+    { m:/dashi|出汁|だし|umami|うま味/i, en:"For fish-free dashi, simmer kombu and dried shiitake. That umami base carries miso soup, nabe, and noodle broths.", ja:"魚を使わない出汁は、昆布と干し椎茸を煮出します。そのうま味が味噌汁、鍋、麺のスープを支えます。" },
+    { m:/iron|鉄|calcium|カルシウム/i, en:"Leafy greens, tofu set with calcium, sesame, and legumes cover iron and calcium. Pair iron-rich foods with vitamin C to absorb more.", ja:"葉物野菜、カルシウム凝固の豆腐、ごま、豆類で鉄とカルシウムを補えます。鉄分はビタミンCと一緒にとると吸収が良くなります。" },
+  ],
+  "char-host": [
+    { m:/ramen|ラーメン|noodle|麺/i, en:"Tonight's spotlight is our Shoyu Mushroom Ramen — tap it to add to your cart while we cook!", ja:"今夜の注目は醤油きのこラーメン！作っている間にタップしてカートに追加してね。" },
+    { m:/miso|味噌|sauce|ソース/i, en:"Our White Koji Miso is the secret here. One spoon, huge umami. It's in the shelf below the stage.", ja:"白麹味噌がここでの秘密です。ひとさじで大きなうま味。ステージ下の棚にありますよ。" },
+  ],
+};
+function aiChat(characterId, message, locale){
+  const list = SCRIPTS[characterId] || [];
+  const hit = list.find(s => s.m.test(message));
+  if (hit) return locale==="ja"?hit.ja:hit.en;
+  const c = CHARACTERS[characterId];
+  if (c) return locale==="ja"?(c.greeting.ja||c.greeting.en):c.greeting.en;
+  return locale==="ja"?"（デモAI）その質問には本番環境のAIが詳しくお答えします。":"(Demo AI) A real model would answer that in production.";
+}
+
+/* ---------- i18n (mirrors apps/web/lib/i18n.ts) ---------- */
+const UI = {
+  brand:{en:"Tarian's",ja:"タリアンズ"},
+  tagline:{en:"Education · AI · Plant-based — for Japan, Asia, and the world.",ja:"教育・AI・プラントベース — 日本、アジア、そして世界へ。"},
+  "nav.home":{en:"Home",ja:"ホーム"}, "nav.marketplace":{en:"Marketplace",ja:"マーケット"}, "nav.vendors":{en:"Vendors",ja:"ベンダー"}, "nav.kitchen":{en:"Cloud Kitchen",ja:"クラウドキッチン"}, "nav.education":{en:"Education",ja:"教育"}, "nav.live":{en:"LIVE",ja:"LIVE"},
+  "cart.title":{en:"Cart",ja:"カート"}, "cart.empty":{en:"Your cart is empty.",ja:"カートは空です。"}, "cart.total":{en:"Total",ja:"合計"}, "cart.add":{en:"Add to cart",ja:"カートに追加"}, "cart.checkout":{en:"Checkout (demo)",ja:"購入手続き（デモ）"},
+  "cart.checkoutNote":{en:"Demo only — no payment is processed. Payments are a proposed integration.",ja:"デモのみ — 決済は行われません。決済は提案中の連携機能です。"},
+  "common.allRegions":{en:"All regions",ja:"すべての地域"}, "common.region":{en:"Region",ja:"地域"}, "common.viewVendor":{en:"Visit storefront",ja:"ストアを見る"},
+  "ai.ask":{en:"Ask",ja:"質問"}, "ai.placeholder":{en:"Ask about nutrition, cooking, ingredients…",ja:"栄養、料理、食材について聞いてみる…"}, "ai.demoBadge":{en:"Demo AI — scripted, no live model",ja:"デモAI — スクリプト式、ライブモデルなし"},
+  "live.title":{en:"Tarian's LIVE",ja:"タリアンズLIVE"}, "live.spotlight":{en:"Now spotlighting",ja:"注目の商品"}, "kitchen.leadTime":{en:"Ready in",ja:"調理時間"},
+};
+let LOC = "ja", CUR = "JPY", CART = [], VIEW = "home", liveTimer = null;
+const t = (o) => (LOC==="ja"?(o.ja||o.en):o.en);
+const ui = (k) => t(UI[k]);
+const fmt = (p) => CUR==="JPY" ? "¥"+p.jpy.toLocaleString("ja-JP") : "$"+p.usd.toFixed(2);
+
+/* ---------- cart ---------- */
+function addToCart(refId, kind, name, price){
+  const ex = CART.find(c=>c.refId===refId);
+  if (ex) ex.qty++; else CART.push({refId,kind,name,price,qty:1});
+  renderCart();
+}
+function removeFromCart(refId){ CART = CART.filter(c=>c.refId!==refId); renderCart(); }
+function cartTotal(){ return CART.reduce((a,c)=>({jpy:a.jpy+c.price.jpy*c.qty, usd:a.usd+c.price.usd*c.qty}),{jpy:0,usd:0}); }
+function openCart(){ document.getElementById("overlay").classList.add("open"); document.getElementById("drawer").classList.add("open"); }
+function closeCart(){ document.getElementById("overlay").classList.remove("open"); document.getElementById("drawer").classList.remove("open"); }
+function checkout(){ if(!CART.length) return; alert(ui("cart.checkoutNote")); CART=[]; renderCart(); closeCart(); }
+function renderCart(){
+  const n = CART.reduce((a,c)=>a+c.qty,0);
+  const badge = document.getElementById("cartCount");
+  badge.textContent = n; badge.style.display = n?"flex":"none";
+  document.getElementById("cartItems").innerHTML = CART.length ? CART.map(c=>
+    `<div class="ci"><div><div style="font-weight:600">${t(c.name)}</div><div class="muted">${fmt(c.price)} × ${c.qty}</div></div><button onclick="removeFromCart('${c.refId}')" style="border:none;background:none;color:#dc2626;cursor:pointer">✕</button></div>`
+  ).join("") : `<p class="muted">${ui("cart.empty")}</p>`;
+  document.getElementById("cartTotal").textContent = fmt(cartTotal());
+}
+
+/* ---------- chrome ---------- */
+function setLocale(v){ LOC=v; document.documentElement.lang=v; chrome(); render(); }
+function setCurrency(v){ CUR=v; chrome(); render(); }
+function chrome(){
+  document.getElementById("brandName").textContent = ui("brand");
+  document.getElementById("cartLabel").textContent = ui("cart.title");
+  document.getElementById("cartTitle").textContent = ui("cart.title");
+  document.getElementById("totalLabel").textContent = ui("cart.total");
+  document.getElementById("checkoutBtn").textContent = ui("cart.checkout");
+  document.getElementById("checkoutNote").textContent = ui("cart.checkoutNote");
+  const navItems = [["home","nav.home"],["marketplace","nav.marketplace"],["vendors","nav.vendors"],["kitchen","nav.kitchen"],["education","nav.education"],["live","nav.live"]];
+  document.getElementById("nav").innerHTML = navItems.map(([v,k])=>`<button class="${VIEW===v?'active':''}" onclick="go('${v}')">${ui(k)}</button>`).join("");
+  renderCart();
+}
+function go(v){ if(liveTimer){clearInterval(liveTimer); liveTimer=null;} VIEW=v; chrome(); render(); window.scrollTo(0,0); }
+
+/* ---------- views ---------- */
+function addProduct(id){ const p=PRODUCTS.find(x=>x.id===id); addToCart(p.id,"product",p.name,p.price); }
+function addMeal(id){ const m=MEALS.find(x=>x.id===id); addToCart(m.id,"meal",m.name,m.price); }
+
+function render(){
+  const app = document.getElementById("app");
+  if (VIEW==="home") app.innerHTML = viewHome();
+  else if (VIEW==="marketplace") app.innerHTML = viewMarket("ALL");
+  else if (VIEW==="vendors") app.innerHTML = viewVendors();
+  else if (VIEW && VIEW.startsWith("vendor:")) app.innerHTML = viewVendor(VIEW.slice(7));
+  else if (VIEW==="kitchen") app.innerHTML = viewKitchen();
+  else if (VIEW==="education") app.innerHTML = viewEducation();
+  else if (VIEW==="live") { app.innerHTML = viewLive(); startLive(); }
+}
+function pcard(p){
+  return `<div class="card">
+    <div style="display:flex;justify-content:space-between"><span style="font-size:2.2rem">${p.imageEmoji}</span><span class="region">${p.region}</span></div>
+    <h3 style="margin:8px 0 4px">${t(p.name)}</h3>
+    <p class="muted" style="min-height:40px">${t(p.description)}</p>
+    <div>${p.dietary.map(d=>`<span class="pill">${d}</span>`).join("")}</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+      <span class="price">${fmt(p.price)}</span><button class="btn" onclick="addProduct('${p.id}')">${ui("cart.add")}</button>
+    </div></div>`;
+}
+function viewHome(){
+  const pillars=[["📚",{en:"Education",ja:"教育"},{en:"AI-guided plant-based learning.",ja:"AIが導くプラントベース学習。"}],["🤖",{en:"Artificial Intelligence",ja:"人工知能"},{en:"AlphaDataCenter.ai powers every experience.",ja:"AlphaDataCenter.aiがすべてを支えます。"}],["🌱",{en:"Plant-based",ja:"プラントベース"},{en:"A global marketplace of plant products.",ja:"植物性商品のグローバルマーケット。"}]];
+  const mods=[["marketplace","🛒","nav.marketplace"],["vendors","🏬","nav.vendors"],["kitchen","🍜","nav.kitchen"],["education","🎓","nav.education"],["live","🎥","live.title"]];
+  return `<section class="hero"><div class="demo">● ${LOC==="ja"?"投資家向けデモ・モックデータ":"Investor demo · mock data"}</div>
+    <h1>${ui("brand")}</h1><p style="font-size:1.1rem;max-width:620px;opacity:.9">${ui("tagline")}</p>
+    <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap"><button class="btn" style="background:#fff;color:var(--g700)" onclick="go('marketplace')">${ui("nav.marketplace")} →</button><button class="btn amber" onclick="go('live')">${ui("live.title")} 🎥</button></div></section>
+    <h2 class="sec" style="margin-top:28px">${LOC==="ja"?"3つの柱":"Three pillars"}</h2>
+    <div class="grid cols3">${pillars.map(([e,n,d])=>`<div class="card"><div style="font-size:1.8rem">${e}</div><h3>${t(n)}</h3><p class="muted">${t(d)}</p></div>`).join("")}</div>
+    <h2 class="sec" style="margin-top:28px">${LOC==="ja"?"プラットフォームを探索":"Explore the platform"}</h2>
+    <div class="grid cols3">${mods.map(([v,e,k])=>`<div class="card" style="cursor:pointer;display:flex;gap:12px;align-items:center" onclick="go('${v}')"><span style="font-size:1.8rem">${e}</span><strong>${ui(k)}</strong></div>`).join("")}</div>`;
+}
+function viewMarket(){
+  const regions=["ALL","JP","APAC","GLOBAL"];
+  const r = window._mr || "ALL";
+  const list = r==="ALL"?PRODUCTS:PRODUCTS.filter(p=>p.region===r);
+  return `<h2 class="sec">${ui("nav.marketplace")}</h2><p class="muted">${LOC==="ja"?"日本・アジアを中心としたグローバルなプラントベース商品。":"Global plant-based products, Japan & Asia first."}</p>
+    <div class="chipbar">${regions.map(x=>`<button class="chip ${r===x?'active':''}" onclick="window._mr='${x}';render()">${x==="ALL"?ui("common.allRegions"):x}</button>`).join("")}</div>
+    <div class="grid cols3">${list.map(pcard).join("")}</div>`;
+}
+function viewVendors(){
+  return `<h2 class="sec">${ui("nav.vendors")}</h2><div class="grid cols2">${VENDORS.map(v=>
+    `<div class="card" style="cursor:pointer;display:flex;gap:16px" onclick="go('vendor:${v.slug}')"><span style="font-size:2.4rem">${v.logoEmoji}</span><div><div style="display:flex;gap:8px;align-items:center"><h3 style="margin:0">${t(v.name)}</h3>${v.verified?`<span class="demo">● ${LOC==="ja"?"認証（モック）":"Verified (mock)"}</span>`:""}</div><p class="muted">${t(v.story)}</p><span style="color:var(--g700);font-size:.85rem">${ui("common.viewVendor")} →</span></div></div>`
+  ).join("")}</div>`;
+}
+function viewVendor(slug){
+  const v = VENDORS.find(x=>x.slug===slug); if(!v) return "<p>Not found</p>";
+  const list = PRODUCTS.filter(p=>p.vendorId===v.id);
+  return `<section class="hero" style="background:linear-gradient(135deg,var(--g500),var(--g700))"><div style="display:flex;gap:14px;align-items:center"><span style="font-size:3rem">${v.logoEmoji}</span><div><div style="display:flex;gap:8px;align-items:center"><h1 style="margin:0;font-size:1.8rem">${t(v.name)}</h1>${v.verified?`<span class="demo">● ${LOC==="ja"?"認証（モック）":"Verified (mock)"}</span>`:""}</div><span style="opacity:.8">${v.region}</span></div></div><p style="opacity:.9;max-width:620px">${t(v.story)}</p></section>
+    <h2 class="sec" style="margin-top:24px">${LOC==="ja"?"商品":"Products"}</h2><div class="grid cols3">${list.map(pcard).join("")}</div>`;
+}
+function viewKitchen(){
+  return `<h2 class="sec">${ui("nav.kitchen")}</h2><p class="muted">${LOC==="ja"?"クラウドキッチンで作る、できたてのプラントベース料理。":"Freshly prepared plant-based meals from our cloud kitchens."}</p>
+    <div class="grid cols2">${MEALS.map(m=>`<div class="card" style="display:flex;gap:16px"><span style="font-size:2.6rem">${m.imageEmoji}</span><div style="flex:1"><h3 style="margin:0 0 4px">${t(m.name)}</h3><p class="muted">${t(m.description)}</p><p class="muted">${ui("kitchen.leadTime")} ${m.leadTimeMin}${LOC==="ja"?"分":" min"} · ${m.region}</p><div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px"><span class="price">${fmt(m.price)}</span><button class="btn" onclick="addMeal('${m.id}')">${ui("cart.add")}</button></div></div></div>`).join("")}</div>`;
+}
+function viewEducation(){
+  const ci = window._ci||0; const c = COURSES[ci];
+  const tutor = "char-tutor";
+  return `<h2 class="sec">${ui("nav.education")}</h2><p class="muted">${LOC==="ja"?"AIチューターと学ぶプラントベースの知識。":"Learn plant-based skills with an AI tutor."}</p>
+    <div class="grid" style="grid-template-columns:1fr;gap:20px"><div>
+      <div class="chipbar">${COURSES.map((x,i)=>`<button class="chip ${ci===i?'active':''}" onclick="window._ci=${i};render()">${t(x.title)}</button>`).join("")}</div>
+      <div class="card"><div style="display:flex;gap:8px;align-items:center"><h3 style="margin:0">${t(c.title)}</h3><span class="region">${c.level}</span></div><p class="muted">${t(c.summary)}</p>
+        <ol style="padding-left:18px">${c.lessons.map((l,i)=>`<li style="margin-bottom:10px"><strong>${t(l.title)}</strong> <span class="muted">· ${l.durationMin}${LOC==="ja"?"分":" min"}</span><br><span>${t(l.body)}</span></li>`).join("")}</ol></div>
+      ${chatHtml(tutor)}
+    </div></div>`;
+}
+const SPOT_IDS = ["p-koji-miso","p-tofu-silken","p-banh-mi-kit"];
+function viewLive(){
+  const host = "char-host"; const c = CHARACTERS[host];
+  window._spot = window._spot||0; const p = PRODUCTS.find(x=>x.id===SPOT_IDS[window._spot]);
+  return `<div style="display:flex;gap:10px;align-items:center;margin-bottom:12px"><h2 class="sec" style="margin:0">${ui("live.title")}</h2><span class="live-tag">● LIVE</span><span class="demo">● ${LOC==="ja"?"スクリプト式・動画なし":"Scripted · no live video"}</span></div>
+    <div class="grid" style="grid-template-columns:1fr;gap:20px">
+      <div class="stage"><div style="display:flex;gap:12px;align-items:center;margin-bottom:16px"><span style="font-size:3rem">${c.avatarEmoji}</span><div><strong>${t(c.name)}</strong><br><span style="opacity:.7">${t(c.role)}</span></div></div>
+      <p style="text-transform:uppercase;letter-spacing:.05em;opacity:.6;font-size:.8rem">${ui("live.spotlight")}</p>
+      <div class="spot"><span style="font-size:3.4rem">${p.imageEmoji}</span><div style="flex:1"><h2 style="margin:0">${t(p.name)}</h2><p style="opacity:.85">${t(p.description)}</p><p class="price" style="color:#fff">${fmt(p.price)}</p></div><button class="btn amber" onclick="addProduct('${p.id}')">${ui("cart.add")}</button></div>
+      <div style="margin-top:12px;display:flex;gap:8px">${SPOT_IDS.map((_,i)=>`<button class="dot ${window._spot===i?'active':''}" onclick="window._spot=${i};render()"></button>`).join("")}</div></div>
+      ${chatHtml(host)}
+    </div>`;
+}
+function startLive(){ if(liveTimer) clearInterval(liveTimer); liveTimer=setInterval(()=>{ if(VIEW!=="live"){clearInterval(liveTimer);liveTimer=null;return;} window._spot=(window._spot+1)%SPOT_IDS.length; render(); },6000); }
+
+/* chat widget */
+function chatHtml(charId){
+  const c = CHARACTERS[charId];
+  const log = (window._chat&&window._chat[charId])|| [{from:"ai",text:t(c.greeting)}];
+  if(!window._chat) window._chat={}; window._chat[charId]=log;
+  return `<div class="chat"><div class="head"><span style="font-size:1.6rem">${c.avatarEmoji}</span><div style="flex:1"><div style="font-weight:600">${t(c.name)}</div><div class="muted">${t(c.role)}</div></div><span class="demo">● ${ui("ai.demoBadge")}</span></div>
+    <div class="log" id="log-${charId}">${log.map(m=>`<div class="msg ${m.from}">${m.text}</div>`).join("")}</div>
+    <div class="in"><input id="in-${charId}" placeholder="${ui("ai.placeholder")}" onkeydown="if(event.key==='Enter')sendChat('${charId}')"><button class="btn" onclick="sendChat('${charId}')">${ui("ai.ask")}</button></div></div>`;
+}
+function sendChat(charId){
+  const input = document.getElementById("in-"+charId); const text=(input.value||"").trim(); if(!text) return;
+  window._chat[charId].push({from:"user",text});
+  window._chat[charId].push({from:"ai",text:aiChat(charId,text,LOC)});
+  input.value="";
+  const log=document.getElementById("log-"+charId);
+  log.innerHTML = window._chat[charId].map(m=>`<div class="msg ${m.from}">${m.text}</div>`).join("");
+  log.scrollTop = log.scrollHeight;
+}
+
+/* boot */
+chrome(); render();
+</script>
+</body>
+</html>

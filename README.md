@@ -77,3 +77,13 @@ Tarian's
     </div>
 </body>
 </html>
+
+---
+
+## Tarian's Platform Prototype
+
+An investor-ready, locally runnable prototype of the Tarian's platform (Education · AI · plant-based marketplace · vendor storefronts · cloud kitchen · Tarian's LIVE) lives in a separate folder:
+
+👉 [`tarians-platform-prototype/`](./tarians-platform-prototype)
+
+Mock data only — nothing is deployed and no paid services are used. See [`tarians-platform-prototype/README.md`](./tarians-platform-prototype/README.md) for setup and run instructions.
